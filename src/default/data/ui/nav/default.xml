@@ -1,0 +1,18 @@
+<nav  color="2e363f">
+  
+  <collection label="Splunk">
+  	<view name="search"  />
+  	<view name="data_models" />
+  	<view name="reports" />
+  	<view name="alerts" />
+  	<view name="dashboards" />
+  </collection>
+  
+  <view name="dashboard" default='true' />
+  <view name="hosts" />
+  <view name="detections" />
+  <view name="campaigns" />
+  <view name="audit_logs" />
+  <view name="health_logs"/>
+  <view name="correlations" />
+</nav>

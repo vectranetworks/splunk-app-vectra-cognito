@@ -1,0 +1,248 @@
+<form>
+  <label>Vectra Dashboard</label>
+  <fieldset submitButton="false">
+    <input type="time" token="field1">
+      <label></label>
+      <default>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <single>
+        <title>High</title>
+        <search>
+          <query>index=* sourcetype=Vectra-CEF signature="hsc" | dedup src | search threat&gt;=50 certainty&lt;50 | stats count</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+        </search>
+        <option name="useThousandSeparators">1</option>
+        <option name="useColors">1</option>
+        <option name="trendInterval">auto</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="showSparkline">1</option>
+        <option name="rangeValues">[-1]</option>
+        <option name="rangeColors">["0x65a637","0xf05a28"]</option>
+        <option name="numberPrecision">0</option>
+        <option name="colorMode">block</option>
+        <option name="colorBy">value</option>
+        <option name="drilldown">all</option>
+        <drilldown>
+          <link>hosts?form.hostseverity=threat%3E%3D50%20certainty%3C%3D50</link>
+        </drilldown>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>Critical</title>
+        <search>
+          <query>index=* sourcetype=Vectra-CEF signature="hsc" | dedup src | search threat&gt;=50 certainty&gt;=50 |  stats count</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+        </search>
+        <option name="useThousandSeparators">1</option>
+        <option name="useColors">1</option>
+        <option name="trendInterval">auto</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="showSparkline">1</option>
+        <option name="rangeValues">[-1]</option>
+        <option name="rangeColors">["0x65a637","0xbe1e2d"]</option>
+        <option name="numberPrecision">0</option>
+        <option name="colorMode">block</option>
+        <option name="colorBy">value</option>
+        <option name="drilldown">all</option>
+        <drilldown>
+          <link>hosts?form.hostseverity=threat%3E%3D50%20certainty%3E%3D50</link>
+        </drilldown>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <single>
+        <title>Low</title>
+        <search>
+          <query>index=* sourcetype=Vectra-CEF signature="hsc" | dedup src | search threat&gt;0 AND threat&lt;50 certainty&gt;0 AND certainty&lt;50 | stats count</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+        </search>
+        <option name="useThousandSeparators">1</option>
+        <option name="useColors">1</option>
+        <option name="trendInterval">auto</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="showSparkline">1</option>
+        <option name="rangeValues">[-1]</option>
+        <option name="rangeColors">["0x65a637","0x4e6875"]</option>
+        <option name="numberPrecision">0</option>
+        <option name="colorMode">block</option>
+        <option name="colorBy">value</option>
+        <option name="drilldown">all</option>
+        <drilldown>
+          <link>hosts?form.hostseverity=threat%3E0%20AND%20threat%3C50%20certainty%3E0%20AND%20certainty%3C50</link>
+        </drilldown>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>Medium</title>
+        <search>
+          <query>index=* sourcetype=Vectra-CEF signature="hsc" | dedup src |  search threat&lt;50 certainty&gt;=50 | stats count</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+        </search>
+        <option name="useThousandSeparators">1</option>
+        <option name="useColors">1</option>
+        <option name="trendInterval">auto</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="showSparkline">1</option>
+        <option name="rangeValues">[-1]</option>
+        <option name="rangeColors">["0x65a637","0xfaaf40"]</option>
+        <option name="numberPrecision">0</option>
+        <option name="colorMode">block</option>
+        <option name="colorBy">value</option>
+        <option name="drilldown">all</option>
+        <drilldown>
+          <link>hosts?form.hostseverity=threat%3C%3D50%20certainty%3E%3D50</link>
+        </drilldown>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <html>
+      <p/>
+    </html>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Worst Offenders</title>
+      <table>
+        <search>
+          <query>index=* sourcetype=Vectra-CEF signature="hsc"  | dedup src | table shost,src,threat,certainty,_time | sort -num(threat), -num(certainty) | head 10 | convert timeformat="%Y/%m/%d %H:%M:%S" ctime(_time) |rename shost as "Source", src as "Source IP", threat as "Threat", certainty as "Certainty", _time as "Latest Detection"</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+        </search>
+        <option name="count">10</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">row</option>
+        <option name="rowNumbers">false</option>
+        <option name="wrap">true</option>
+        <drilldown>
+          <link>
+            <![CDATA[detections?form.search=$click.value$&form.time.earliest=$field1.earliest$&form.time.latest=$field1.latest$]]>
+          </link>
+        </drilldown>
+      </table>
+    </panel>
+    <panel>
+      <title>Key Assets</title>
+      <table>
+        <search>
+          <query>index=* sourcetype=Vectra-CEF signature="hsc"  cs1="true" OR cs2="true" | dedup src | table shost,src,cs1,cs2,threat,certainty,_time | sort -num(threat), -num(certainty) | head 10 | convert timeformat="%Y/%m/%d %H:%M:%S" ctime(_time) |rename shost as "Source", src as "Source IP", cs1 AS "Src Key Asset", cs2 AS "Dst Key Asset", threat as "Threat", certainty as "Certainty", _time as "Latest Detection"</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+        </search>
+        <option name="count">10</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">row</option>
+        <option name="rowNumbers">false</option>
+        <option name="wrap">true</option>
+        <drilldown>
+          <link>
+            <![CDATA[detections?form.search=$click.value$&form.time.earliest=$field1.earliest$&form.time.latest=$field1.latest$]]>
+          </link>
+        </drilldown>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Detections By Type</title>
+      <chart>
+        <search>
+          <query>index=* sourcetype=Vectra-CEF signature!="hsc" AND signature!="audit" AND  signature!="campaigns" AND signature!="health" | stats count by name</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+        </search>
+        <option name="charting.legend.placement">none</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.drilldown">all</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart">bar</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">collapsed</option>
+        <option name="charting.axisTitleY.text">Amount of Detections</option>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsY.majorUnit">1</option>
+        <option name="height">500</option>
+        <drilldown>
+          <link>detections?form.name=$click.value$</link>
+        </drilldown>
+      </chart>
+    </panel>
+    <panel>
+      <title>Detections By Category</title>
+      <chart>
+        <search>
+          <query>index=* sourcetype=Vectra-CEF signature!="hsc" AND signature!="audit" AND signature!=campaigns AND signature!="health" | stats count by cat</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisLabelsY.majorUnit">1</option>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">collapsed</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">bar</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">all</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.placement">none</option>
+        <option name="height">500</option>
+        <drilldown>
+          <link>detections?form.cat=$click.value$</link>
+        </drilldown>
+      </chart>
+    </panel>
+  </row>
+</form>

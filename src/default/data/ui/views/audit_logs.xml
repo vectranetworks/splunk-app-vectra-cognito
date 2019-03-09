@@ -1,0 +1,58 @@
+<form>
+  <label>Audit Logs</label>
+  <fieldset submitButton="false" autoRun="true">
+    <input type="time" token="field1">
+      <label></label>
+      <default>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+    <input type="dropdown" token="userid" searchWhenChanged="true">
+      <label>User</label>
+      <default>*</default>
+      <fieldForLabel>suser</fieldForLabel>
+      <fieldForValue>suser</fieldForValue>
+      <search>
+        <query>index=* sourcetype="vectra-cef" signature="audit" | stats count by suser</query>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </search>
+      <choice value="*">All</choice>
+    </input>
+    <input type="dropdown" token="outcme">
+      <label>Result</label>
+      <choice value="*">All</choice>
+      <default>*</default>
+      <fieldForLabel>outcome</fieldForLabel>
+      <fieldForValue>outcome</fieldForValue>
+      <search>
+        <query>index=* sourcetype="vectra-cef" signature="audit" | stats count by outcome</query>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </search>
+    </input>
+    <input type="text" token="search">
+      <label>Search</label>
+      <default>*</default>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <table>
+        <search>
+          <query>index=* sourcetype="vectra-cef" signature="audit" $userid$ $outcme$ $search$ | convert timeformat="%Y/%m/%d %H:%M:%S" ctime(_time) | table _time, suser,spriv,outcome, msg | rename _time as "Timestamp", suser as "User", spriv as "Role", msg as "Activity", outcome as "Result"</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+        </search>
+        <option name="count">50</option>
+        <option name="drilldown">none</option>
+        <option name="rowNumbers">true</option>
+        <option name="wrap">true</option>
+        <format type="color" field="Result">
+          <colorPalette type="map">{"success":#65A637,"failure":#D93F3C}</colorPalette>
+        </format>
+      </table>
+    </panel>
+  </row>
+</form>
