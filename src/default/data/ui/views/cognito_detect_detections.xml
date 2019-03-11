@@ -1,43 +1,43 @@
 <form>
-  <label>Detections</label>
+  <label>Cognito Detect Detections</label>
   <fieldset autoRun="true" submitButton="false">
-    <input type="time" searchWhenChanged="true" token="time">
-      <label>Time</label>
+    <input type="time" searchWhenChanged="true" token="timepicker">
+      <label>Timerange:</label>
       <default>
         <earliest>-24h@h</earliest>
         <latest>now</latest>
       </default>
     </input>
-    <input type="dropdown" searchWhenChanged="true" token="cat">
-      <label>Detection Categories</label>
+    <input type="dropdown" searchWhenChanged="true" token="category_token">
+      <label>Detection Categories:</label>
       <choice value="*">All</choice>
       <default>*</default>
       <search>
-        <query>index=* sourcetype="Vectra-CEF" signature!="hsc" AND signature!="audit" AND signature!=campaigns AND signature!="health" | stats count by cat</query>
+        <query>`vectra_index` sourcetype="vectra:cognito:detect" signature!="hsc" signature!="audit" signature!=campaigns signature!="health" | stats count by category</query>
         <earliest>-30d@d</earliest>
         <latest>now</latest>
       </search>
-      <fieldForLabel>cat</fieldForLabel>
-      <fieldForValue>cat</fieldForValue>
+      <fieldForLabel>category</fieldForLabel>
+      <fieldForValue>category</fieldForValue>
       <prefix>"</prefix>
       <suffix>"</suffix>
     </input>
-    <input type="dropdown" token="name" searchWhenChanged="true">
+    <input type="dropdown" token="signature_name_token" searchWhenChanged="true">
       <label>Type</label>
       <choice value="*">All</choice>
       <default>*</default>
       <search>
-        <query>index=* sourcetype="Vectra-CEF" signature!="hsc" AND signature!="audit" AND signature!=campaigns AND signature!="health" cat=$cat$ | stats count by name</query>
+        <query>`vectra_index` sourcetype="vectra:cognito:detect" signature!="hsc" signature!="audit" signature!=campaigns signature!="health" category=$category_token$ | stats count by signature_name</query>
         <earliest>-30d@d</earliest>
         <latest>now</latest>
       </search>
-      <fieldForLabel>name</fieldForLabel>
-      <fieldForValue>name</fieldForValue>
+      <fieldForLabel>signature_name</fieldForLabel>
+      <fieldForValue>signature_name</fieldForValue>
       <prefix>"</prefix>
       <suffix>"</suffix>
     </input>
-    <input type="text" searchWhenChanged="true" token="search">
-      <label>Search</label>
+    <input type="text" searchWhenChanged="true" token="search_token">
+      <label>Search Filter:</label>
       <default>*</default>
     </input>
   </fieldset>
@@ -46,9 +46,9 @@
       <title>Detection Type Activity over Time</title>
       <chart>
         <search>
-          <query>index=* sourcetype=Vectra-CEF signature!="hsc" AND signature!="audit" AND signature!=campaigns AND signature!="health" $search$ cat=$cat$ name=$name$ |dedup externalId| timechart count by cat</query>
-          <earliest>$time.earliest$</earliest>
-          <latest>$time.latest$</latest>
+          <query>`vectra_index` sourcetype="vectra:cognito:detect" signature!="hsc" signature!="audit" signature!=campaigns signature!="health" $search_token$ category=$category_token$ signature_name=$signature_name_token$ |dedup external_id| timechart count by category</query>
+          <earliest>$timepicker.earliest$</earliest>
+          <latest>$timepicker.latest$</latest>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -75,6 +75,7 @@
         <option name="charting.layout.splitSeries.allowIndependentYRanges">1</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
         <option name="charting.legend.placement">right</option>
+        <option name="refresh.display">progressbar</option>
       </chart>
     </panel>
   </row>
@@ -83,13 +84,14 @@
       <title>Detection Type Table</title>
       <table>
         <search>
-          <query>index=* sourcetype=Vectra-CEF signature!="hsc" AND signature!="audit" AND signature!=campaigns AND signature!="health" $search$ cat=$cat$ name=$name$ externalId=* |dedup externalId| table cs5, cat,name,shost,src,dhost,dest_ip,flexNumber1,flexNumber2,cs4,_time| convert timeformat="%Y/%m/%d %H:%M:%S" ctime(_time) | rename cs5 AS Triaged cat AS Category name AS Type shost AS "Source" src AS "Src IP" flexNumber1 AS Threat flexNumber2 AS Certainty cs4 AS "Detection Details" _time AS "Latest Detection" dhost AS "Destination" dest_ip AS "Dst IP" eventId AS eventID | eval Category=case (Category=="COMMAND &amp; CONTROL", "Command &amp; Control", Category== "BOTNET ACTIVITY","Botnet Activity", Category=="RECONNAISSANCE","Reconnaissance",Category=="LATERAL MOVEMENT","Lateral_Movement",Category=="EXFILTRATION","Exfiltration")</query>
-          <earliest>$time.earliest$</earliest>
-          <latest>$time.latest$</latest>
+          <query>`vectra_index` sourcetype="vectra:cognito:detect" signature!="hsc" signature!="audit" signature!=campaigns signature!="health" $search_token$ category=$category_token$ signature_name=$signature_name_token$ external_id=* |dedup external_id | eval category=case (category=="COMMAND &amp; CONTROL", "Command &amp; Control", category== "BOTNET ACTIVITY","Botnet Activity", category=="RECONNAISSANCE","Reconnaissance",category=="LATERAL MOVEMENT","Lateral_Movement",category=="EXFILTRATION","Exfiltration") | convert timeformat="%Y-%m-%dT%H:%M:%S%z" ctime(_time) | table triaged, category, signature_name, src, src_ip, dest, dest_ip, threat, certainty, vectra_url ,_time | rename triaged AS Triaged category AS Category signature_name AS Type src AS "Source" src_ip AS "Source IP" threat AS Threat certainty AS Certainty vectra_url AS "Detection Details" _time AS "Latest Detection" dest AS "Destination" dest_ip AS "Destination IP" event_id AS "Event ID"</query>
+          <earliest>$timepicker.earliest$</earliest>
+          <latest>$timepicker.latest$</latest>
         </search>
         <option name="count">25</option>
         <option name="dataOverlayMode">none</option>
         <option name="drilldown">cell</option>
+        <option name="refresh.display">progressbar</option>
         <option name="rowNumbers">true</option>
         <option name="wrap">true</option>
         <drilldown target="My New Window">

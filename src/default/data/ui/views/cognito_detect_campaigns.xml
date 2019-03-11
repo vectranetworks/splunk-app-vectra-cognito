@@ -1,0 +1,95 @@
+<form>
+  <label>Cognito Detect Campaigns</label>
+  <fieldset submitButton="false" autoRun="true">
+    <input type="time" token="timepicker" searchWhenChanged="true">
+      <label>Timerange:</label>
+      <default>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+    <input type="multiselect" token="signature_token">
+      <label>Campaign ID:</label>
+      <choice value="*">All</choice>
+      <default>*</default>
+      <valuePrefix>signature="</valuePrefix>
+      <valueSuffix>"</valueSuffix>
+      <delimiter> OR </delimiter>
+      <fieldForLabel>signature</fieldForLabel>
+      <fieldForValue>signature</fieldForValue>
+      <search>
+        <query>`vectra_index` sourcetype="vectra:cognito:campaigns"  | stats count by signature</query>
+        <earliest>0</earliest>
+        <latest></latest>
+      </search>
+    </input>
+    <input type="dropdown" token="reason_token" searchWhenChanged="true">
+      <label>Type:</label>
+      <choice value="*">All</choice>
+      <default>*</default>
+      <fieldForLabel>reason</fieldForLabel>
+      <fieldForValue>reason</fieldForValue>
+      <search>
+        <query>`vectra_index` sourcetype="vectra:cognito:campaigns" reason=* 
+|  stats count by reason</query>
+        <earliest>-30d@d</earliest>
+        <latest>now</latest>
+      </search>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <chart>
+        <search>
+          <query>`vectra_index` sourcetype="vectra:cognito:campaigns" $signature_token$ reason="$reason_token$" | dedup  signature src dest | table signature_name, src, dest | stats count by signature | rename count as Activity</query>
+          <earliest>$timepicker.earliest$</earliest>
+          <latest>$timepicker.latest$</latest>
+        </search>
+        <option name="charting.chart">column</option>
+        <option name="charting.drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table>
+        <search>
+          <query>`vectra_index` sourcetype="vectra:cognito:campaigns" $signature_token$ reason=$reason_token$ | table rt,signature, vectra_url, action, src, src_ip, dest, dest_ip, reason, vectra_detection_id
+ | rename rt as _time signature AS "Campaign ID" vectra_url AS "Campaign URL" action AS Action src AS "Hostname" src_ip AS "Source IP" dest AS "Destination" dest_ip AS "Destination IP" reason AS Type vectra_detection_id AS "Detection ID"</query>
+          <earliest>$timepicker.earliest$</earliest>
+          <latest>$timepicker.latest$</latest>
+        </search>
+        <option name="count">50</option>
+        <option name="drilldown">cell</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">true</option>
+        <drilldown target="My New Window">
+          <condition field="Campaign ID">
+            <link>
+              <![CDATA[campaigns?form.cmpgn=$click.value2$&form.time.earliest=$time.earliest$&form.time.latest=$time.latest$]]>
+            </link>
+          </condition>
+          <condition field="Campaign URL">
+            <link>$click.value2|n$</link>
+          </condition>
+          <condition field="Hostname">
+            <link>
+              <![CDATA[detections?form.search=$click.value2$&form.time.earliest=$time.earliest$&form.time.latest=$time.latest$]]>
+            </link>
+          </condition>
+          <condition field="IP Address">
+            <link>
+              <![CDATA[detections?form.search=$click.value2$&form.time.earliest=$time.earliest$&form.time.latest=$time.latest$]]>
+            </link>
+          </condition>
+          <condition field="Timestamp"></condition>
+          <condition field="Destination"></condition>
+          <condition field="Destination IP"></condition>
+          <condition field="Type"></condition>
+          <condition field="Detection ID"></condition>
+        </drilldown>
+      </table>
+    </panel>
+  </row>
+</form>

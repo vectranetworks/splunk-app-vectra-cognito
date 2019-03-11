@@ -1,0 +1,33 @@
+[views/dashboard]
+version = 7.2.3
+modtime = 1552146532.444839000
+
+[views/hosts]
+version = 7.2.3
+modtime = 1552246591.596503000
+
+[views/detections]
+version = 7.2.3
+modtime = 1552248378.899201000
+
+[views/campaigns]
+version = 7.2.3
+modtime = 1552246625.941963000
+
+[views/health_logs]
+version = 7.2.3
+modtime = 1552146789.338337000
+
+[views/audit_logs]
+version = 7.2.3
+modtime = 1552247676.980354000
+
+[nav/default]
+version = 7.2.3
+modtime = 1552248603.562291000
+
+[views/overview_cognito]
+export = none
+owner = admin
+version = 7.2.3
+modtime = 1552248574.932549000

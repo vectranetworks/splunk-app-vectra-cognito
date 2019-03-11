@@ -1,0 +1,48 @@
+<form>
+  <label>Cognito Health</label>
+  <fieldset submitButton="false" autoRun="true">
+    <input type="time" token="timepicker" searchWhenChanged="true">
+      <label>Timerange:</label>
+      <default>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+    <input type="dropdown" token="result_token">
+      <label>Result:</label>
+      <choice value="*">All</choice>
+      <default>*</default>
+      <fieldForLabel>result</fieldForLabel>
+      <fieldForValue>result</fieldForValue>
+      <search>
+        <query>`vectra_index` sourcetype="vectra:cognito:health" | stats count by result</query>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </search>
+    </input>
+    <input type="text" token="search_token" searchWhenChanged="true">
+      <label>Search Filter:</label>
+      <default>*</default>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <table>
+        <search>
+          <query>`vectra_index` sourcetype="vectra:cognito:health" result="$result_token$" $search_token$ 
+|  table _time, result, message | rename message as "Activity", result as "Result"</query>
+          <earliest>$timepicker.earliest$</earliest>
+          <latest>$timepicker.latest$</latest>
+        </search>
+        <option name="count">50</option>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">true</option>
+        <option name="wrap">true</option>
+        <format type="color" field="Result">
+          <colorPalette type="map">{"success":#65A637,"failure":#D93F3C}</colorPalette>
+        </format>
+      </table>
+    </panel>
+  </row>
+</form>
