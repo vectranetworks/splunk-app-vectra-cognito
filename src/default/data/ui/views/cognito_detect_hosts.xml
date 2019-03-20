@@ -17,7 +17,7 @@
     <panel>
       <chart>
         <search>
-          <query>`vectra_index` sourcetype="vectra:cognito:hostscoring"  $search_token$  | dedup src | search threat&gt;0 AND certainty&gt;0  | eval status= case(threat&gt;=50 AND certainty&gt;=50, "Critical", threat&gt;=50 AND certainty&lt;50, "High", threat&lt;50 AND certainty&gt;=50, "Medium", true(), "Low") | table status, certainty, threat</query>
+          <query>`vectra_cognito_index` sourcetype="vectra:cognito:hostscoring"  $search_token$  | dedup src | search threat&gt;0 AND certainty&gt;0  | eval status= case(threat&gt;=50 AND certainty&gt;=50, "Critical", threat&gt;=50 AND certainty&lt;50, "High", threat&lt;50 AND certainty&gt;=50, "Medium", true(), "Low") | table status, certainty, threat</query>
           <earliest>$timepicker.earliest$</earliest>
           <latest>$timepicker.latest$</latest>
         </search>
@@ -67,7 +67,7 @@
       </input>
       <table>
         <search>
-          <query>`vectra_index` sourcetype="vectra:cognito:hostscoring" signature="hsc" $search_token$  | dedup src | search $severity_token$ | eval status= case(threat&gt;=50 AND certainty&gt;=50, "Critical", threat&gt;=50 AND certainty&lt;50, "High", threat&lt;50 AND certainty&gt;=50, "Medium", true(), "Low") | table status,src,src_ip, src_key_asset, dest_key_asset, threat,certainty, vectra_url,_time | sort -num(threat), -num(certainty) | convert timeformat="%Y/%m/%d %H:%M:%S" ctime(_time) |rename status as "Severity", shost as "Hostname", src as "IP Address", src_key_asset AS "Src Key Asset", dest_key_asset AS "Dest Key Asset", threat as "Threat", certainty as "Certainty", vectra_url as "Host Details", _time as "Latest Update"</query>
+          <query>`vectra_cognito_index` sourcetype="vectra:cognito:hostscoring" signature="hsc" $search_token$  | dedup src | search $severity_token$ | eval status= case(threat&gt;=50 AND certainty&gt;=50, "Critical", threat&gt;=50 AND certainty&lt;50, "High", threat&lt;50 AND certainty&gt;=50, "Medium", true(), "Low") | table status,src,src_ip, src_key_asset, dest_key_asset, threat,certainty, vectra_url,_time | sort -num(threat), -num(certainty) | convert timeformat="%Y/%m/%d %H:%M:%S" ctime(_time) |rename status as "Severity", shost as "Hostname", src as "IP Address", src_key_asset AS "Src Key Asset", dest_key_asset AS "Dest Key Asset", threat as "Threat", certainty as "Certainty", vectra_url as "Host Details", _time as "Latest Update"</query>
           <earliest>$timepicker.earliest$</earliest>
           <latest>$timepicker.latest$</latest>
         </search>

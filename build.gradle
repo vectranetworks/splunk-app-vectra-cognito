@@ -4,7 +4,7 @@ plugins {
 
 ext {
     distVersion = "${version}"
-    distName = "vectra-${version}.spl"
+    distName = "vectra_cognito-${version}.spl"
 }
 
 task createDist(type: Tar, group: "Custom", description: "Creates the distribution archive") {
@@ -14,33 +14,33 @@ task createDist(type: Tar, group: "Custom", description: "Creates the distributi
     archiveName = "${distName}"
     compression = Compression.GZIP
 
-    into("vectra/default") {
+    into("vectra_cognito/default") {
         from "src/default/"
         exclude '**/.DS_Store'
         filter{ it.replaceAll('@version@', distVersion)}
         fileMode = 0644
     }
 
-    into("vectra/metadata") {
+    into("vectra_cognito/metadata") {
         from "src/metadata/"
         exclude 'local.meta', '**/.DS_Store'
         fileMode = 0644
     }
 
-    into("vectra/static") {
+    into("vectra_cognito/static") {
         from "src/static/"
         exclude '**/.DS_Store'
         fileMode = 0644
     }
 
-    into("vectra/") {
+    into("vectra_cognito/") {
         from "README.md"
         exclude '**/.DS_Store'
         filter{ it.replaceAll('@version@', distVersion)}
         fileMode = 0644
     }
 
-    into("vectra/") {
+    into("vectra_cognito/") {
         from "LICENSE"
         exclude '**/.DS_Store'
         fileMode = 0644

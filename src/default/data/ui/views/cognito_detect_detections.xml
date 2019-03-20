@@ -13,7 +13,7 @@
       <choice value="*">All</choice>
       <default>*</default>
       <search>
-        <query>`vectra_index` sourcetype="vectra:cognito:detect" signature!="hsc" signature!="audit" signature!=campaigns signature!="health" | stats count by category</query>
+        <query>`vectra_cognito_index` sourcetype="vectra:cognito:detect" signature!="hsc" signature!="audit" signature!=campaigns signature!="health" | stats count by category</query>
         <earliest>-30d@d</earliest>
         <latest>now</latest>
       </search>
@@ -27,7 +27,7 @@
       <choice value="*">All</choice>
       <default>*</default>
       <search>
-        <query>`vectra_index` sourcetype="vectra:cognito:detect" signature!="hsc" signature!="audit" signature!=campaigns signature!="health" category=$category_token$ | stats count by signature_name</query>
+        <query>`vectra_cognito_index` sourcetype="vectra:cognito:detect" signature!="hsc" signature!="audit" signature!=campaigns signature!="health" category=$category_token$ | stats count by signature_name</query>
         <earliest>-30d@d</earliest>
         <latest>now</latest>
       </search>
@@ -46,7 +46,7 @@
       <title>Detection Type Activity over Time</title>
       <chart>
         <search>
-          <query>`vectra_index` sourcetype="vectra:cognito:detect" signature!="hsc" signature!="audit" signature!=campaigns signature!="health" $search_token$ category=$category_token$ signature_name=$signature_name_token$ |dedup external_id| timechart count by category</query>
+          <query>`vectra_cognito_index` sourcetype="vectra:cognito:detect" signature!="hsc" signature!="audit" signature!=campaigns signature!="health" $search_token$ category=$category_token$ signature_name=$signature_name_token$ |dedup external_id| timechart count by category</query>
           <earliest>$timepicker.earliest$</earliest>
           <latest>$timepicker.latest$</latest>
         </search>
@@ -84,7 +84,7 @@
       <title>Detection Type Table</title>
       <table>
         <search>
-          <query>`vectra_index` sourcetype="vectra:cognito:detect" signature!="hsc" signature!="audit" signature!=campaigns signature!="health" $search_token$ category=$category_token$ signature_name=$signature_name_token$ external_id=* |dedup external_id | eval category=case (category=="COMMAND &amp; CONTROL", "Command &amp; Control", category== "BOTNET ACTIVITY","Botnet Activity", category=="RECONNAISSANCE","Reconnaissance",category=="LATERAL MOVEMENT","Lateral_Movement",category=="EXFILTRATION","Exfiltration") | convert timeformat="%Y-%m-%dT%H:%M:%S%z" ctime(_time) | table triaged, category, signature_name, src, src_ip, dest, dest_ip, threat, certainty, vectra_url ,_time | rename triaged AS Triaged category AS Category signature_name AS Type src AS "Source" src_ip AS "Source IP" threat AS Threat certainty AS Certainty vectra_url AS "Detection Details" _time AS "Latest Detection" dest AS "Destination" dest_ip AS "Destination IP" event_id AS "Event ID"</query>
+          <query>`vectra_cognito_index` sourcetype="vectra:cognito:detect" signature!="hsc" signature!="audit" signature!=campaigns signature!="health" $search_token$ category=$category_token$ signature_name=$signature_name_token$ external_id=* |dedup external_id | eval category=case (category=="COMMAND &amp; CONTROL", "Command &amp; Control", category== "BOTNET ACTIVITY","Botnet Activity", category=="RECONNAISSANCE","Reconnaissance",category=="LATERAL MOVEMENT","Lateral_Movement",category=="EXFILTRATION","Exfiltration") | convert timeformat="%Y-%m-%dT%H:%M:%S%z" ctime(_time) | table triaged, category, signature_name, src, src_ip, dest, dest_ip, threat, certainty, vectra_url ,_time | rename triaged AS Triaged category AS Category signature_name AS Type src AS "Source" src_ip AS "Source IP" threat AS Threat certainty AS Certainty vectra_url AS "Detection Details" _time AS "Latest Detection" dest AS "Destination" dest_ip AS "Destination IP" event_id AS "Event ID"</query>
           <earliest>$timepicker.earliest$</earliest>
           <latest>$timepicker.latest$</latest>
         </search>

@@ -14,7 +14,7 @@
       <fieldForLabel>user</fieldForLabel>
       <fieldForValue>user</fieldForValue>
       <search>
-        <query>`vectra_index` sourcetype="vectra:cognito:audit" | stats count by user</query>
+        <query>`vectra_cognito_index` sourcetype="vectra:cognito:audit" | stats count by user</query>
         <earliest>-24h@h</earliest>
         <latest>now</latest>
       </search>
@@ -27,7 +27,7 @@
       <fieldForLabel>result</fieldForLabel>
       <fieldForValue>result</fieldForValue>
       <search>
-        <query>`vectra_index` sourcetype="vectra:cognito:audit" | stats count by result</query>
+        <query>`vectra_cognito_index` sourcetype="vectra:cognito:audit" | stats count by result</query>
         <earliest>-24h@h</earliest>
         <latest>now</latest>
       </search>
@@ -41,7 +41,7 @@
     <panel>
       <table>
         <search>
-          <query>`vectra_index` sourcetype="vectra:cognito:audit" user="$user_token$" result="$result_token$" $search_filter_token$ | table _time, user, privilege ,result, message | rename user as "User", privilege as "Role", message as "Activity", result as "Result"</query>
+          <query>`vectra_cognito_index` sourcetype="vectra:cognito:audit" user="$user_token$" result="$result_token$" $search_filter_token$ | table _time, user, privilege ,result, message | rename user as "User", privilege as "Role", message as "Activity", result as "Result"</query>
           <earliest>$field1.earliest$</earliest>
           <latest>$field1.latest$</latest>
         </search>

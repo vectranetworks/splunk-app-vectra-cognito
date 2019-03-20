@@ -15,7 +15,7 @@
       <fieldForLabel>result</fieldForLabel>
       <fieldForValue>result</fieldForValue>
       <search>
-        <query>`vectra_index` sourcetype="vectra:cognito:health" | stats count by result</query>
+        <query>`vectra_cognito_index` sourcetype="vectra:cognito:health" | stats count by result</query>
         <earliest>-24h@h</earliest>
         <latest>now</latest>
       </search>
@@ -29,7 +29,7 @@
     <panel>
       <table>
         <search>
-          <query>`vectra_index` sourcetype="vectra:cognito:health" result="$result_token$" $search_token$ 
+          <query>`vectra_cognito_index` sourcetype="vectra:cognito:health" result="$result_token$" $search_token$ 
 |  table _time, result, message | rename message as "Activity", result as "Result"</query>
           <earliest>$timepicker.earliest$</earliest>
           <latest>$timepicker.latest$</latest>

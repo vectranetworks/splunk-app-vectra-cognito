@@ -14,7 +14,7 @@
       <single>
         <title>High</title>
         <search>
-          <query>`vectra_index` sourcetype="vectra:cognito:hostscoring" threat&gt;=50 certainty&lt;50 | timechart dc(src) as count</query>
+          <query>`vectra_cognito_index` sourcetype="vectra:cognito:hostscoring" threat&gt;=50 certainty&lt;50 | timechart dc(src) as count</query>
           <earliest>$timepicker.earliest$</earliest>
           <latest>$timepicker.latest$</latest>
         </search>
@@ -42,7 +42,7 @@
       <single>
         <title>Critical</title>
         <search>
-          <query>`vectra_index` sourcetype="vectra:cognito:hostscoring" threat&gt;=50 certainty&gt;=50 | timechart dc(src) as count</query>
+          <query>`vectra_cognito_index` sourcetype="vectra:cognito:hostscoring" threat&gt;=50 certainty&gt;=50 | timechart dc(src) as count</query>
           <earliest>$timepicker.earliest$</earliest>
           <latest>$timepicker.latest$</latest>
         </search>
@@ -72,7 +72,7 @@
       <single>
         <title>Low</title>
         <search>
-          <query>`vectra_index` sourcetype="vectra:cognito:hostscoring" threat&gt;0 threat&lt;50 certainty&gt;0 certainty&lt;50 | timechart dc(src) as count</query>
+          <query>`vectra_cognito_index` sourcetype="vectra:cognito:hostscoring" threat&gt;0 threat&lt;50 certainty&gt;0 certainty&lt;50 | timechart dc(src) as count</query>
           <earliest>$timepicker.earliest$</earliest>
           <latest>$timepicker.latest$</latest>
         </search>
@@ -100,7 +100,7 @@
       <single>
         <title>Medium</title>
         <search>
-          <query>`vectra_index` sourcetype="vectra:cognito:hostscoring" threat&lt;50 certainty&gt;=50 | timechart dc(src) as count</query>
+          <query>`vectra_cognito_index` sourcetype="vectra:cognito:hostscoring" threat&lt;50 certainty&gt;=50 | timechart dc(src) as count</query>
           <earliest>$timepicker.earliest$</earliest>
           <latest>$timepicker.latest$</latest>
         </search>
@@ -137,7 +137,7 @@
       <title>Worst Offenders</title>
       <table>
         <search>
-          <query>`vectra_index` sourcetype="vectra:cognito:hostscoring"  | dedup src | table src,src_ip,threat,certainty,_time | sort -num(threat), -num(certainty) | head 10 | convert timeformat="%Y-%m-%dT%H:%M:%S%z" ctime(_time) |rename src as "Source", src_ip as "Source IP", threat as "Threat", certainty as "Certainty", _time as "Latest Detection"</query>
+          <query>`vectra_cognito_index` sourcetype="vectra:cognito:hostscoring"  | dedup src | table src,src_ip,threat,certainty,_time | sort -num(threat), -num(certainty) | head 10 | convert timeformat="%Y-%m-%dT%H:%M:%S%z" ctime(_time) |rename src as "Source", src_ip as "Source IP", threat as "Threat", certainty as "Certainty", _time as "Latest Detection"</query>
           <earliest>$timepicker.earliest$</earliest>
           <latest>$timepicker.latest$</latest>
         </search>
@@ -159,7 +159,7 @@
       <title>Key Assets</title>
       <table>
         <search>
-          <query>`vectra_index` sourcetype="vectra:cognito:hostscoring"  src_key_asset="True" OR dest_key_asset="True" | dedup src | table src,src_ip,src_key_asset,dest_key_asset,threat,certainty,_time | sort -num(threat), -num(certainty) | head 10 | convert timeformat="%Y-%m-%dT%H:%M:%S%z" ctime(_time) |rename src as "Source", src_ip as "Source IP", src_key_asset AS "Src Key Asset", dest_key_asset AS "Dest Key Asset", threat as "Threat", certainty as "Certainty", _time as "Latest Detection"</query>
+          <query>`vectra_cognito_index` sourcetype="vectra:cognito:hostscoring"  src_key_asset="True" OR dest_key_asset="True" | dedup src | table src,src_ip,src_key_asset,dest_key_asset,threat,certainty,_time | sort -num(threat), -num(certainty) | head 10 | convert timeformat="%Y-%m-%dT%H:%M:%S%z" ctime(_time) |rename src as "Source", src_ip as "Source IP", src_key_asset AS "Src Key Asset", dest_key_asset AS "Dest Key Asset", threat as "Threat", certainty as "Certainty", _time as "Latest Detection"</query>
           <earliest>$timepicker.earliest$</earliest>
           <latest>$timepicker.latest$</latest>
         </search>
@@ -182,7 +182,7 @@
       <title>Detections By Type</title>
       <chart>
         <search>
-          <query>`vectra_index` sourcetype="vectra:cognito:*" signature!="hsc" signature!="audit" signature!="campaigns" signature!="health" | stats count by signature_name</query>
+          <query>`vectra_cognito_index` sourcetype="vectra:cognito:*" signature!="hsc" signature!="audit" signature!="campaigns" signature!="health" | stats count by signature_name</query>
           <earliest>$timepicker.earliest$</earliest>
           <latest>$timepicker.latest$</latest>
         </search>
@@ -222,7 +222,7 @@
       <title>Detections By Category</title>
       <chart>
         <search>
-          <query>`vectra_index` sourcetype="vectra:cognito:*" signature!="hsc" signature!="audit" signature!="campaigns" signature!="health" | stats count by category</query>
+          <query>`vectra_cognito_index` sourcetype="vectra:cognito:*" signature!="hsc" signature!="audit" signature!="campaigns" signature!="health" | stats count by category</query>
           <earliest>$timepicker.earliest$</earliest>
           <latest>$timepicker.latest$</latest>
         </search>

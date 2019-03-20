@@ -10,15 +10,15 @@
 
 ```./gradle createDist
 
-distName: vectra-1.0.0.spl
-destinationDir: <repositorypath>/vectra/build/distributions
+distName: vectra_cognito-1.0.0.spl
+destinationDir: <repositorypath>/vectra_cognito/build/distributions
 :createDist
 
 BUILD SUCCESSFUL
 
 Total time: 0.993 secs```
 
-* A new `vectra-<version>.spl` package will be created in the build/distributions directory
+* A new `vectra_cognito-<version>.spl` package will be created in the build/distributions directory
 
 ## Prepare app certification
 

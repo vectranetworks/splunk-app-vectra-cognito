@@ -18,7 +18,7 @@
       <fieldForLabel>signature</fieldForLabel>
       <fieldForValue>signature</fieldForValue>
       <search>
-        <query>`vectra_index` sourcetype="vectra:cognito:campaigns"  | stats count by signature</query>
+        <query>`vectra_cognito_index` sourcetype="vectra:cognito:campaigns"  | stats count by signature</query>
         <earliest>0</earliest>
         <latest></latest>
       </search>
@@ -30,7 +30,7 @@
       <fieldForLabel>reason</fieldForLabel>
       <fieldForValue>reason</fieldForValue>
       <search>
-        <query>`vectra_index` sourcetype="vectra:cognito:campaigns" reason=* 
+        <query>`vectra_cognito_index` sourcetype="vectra:cognito:campaigns" reason=* 
 |  stats count by reason</query>
         <earliest>-30d@d</earliest>
         <latest>now</latest>
@@ -41,7 +41,7 @@
     <panel>
       <chart>
         <search>
-          <query>`vectra_index` sourcetype="vectra:cognito:campaigns" $signature_token$ reason="$reason_token$" | dedup  signature src dest | table signature_name, src, dest | stats count by signature | rename count as Activity</query>
+          <query>`vectra_cognito_index` sourcetype="vectra:cognito:campaigns" $signature_token$ reason="$reason_token$" | dedup  signature src dest | table signature_name, src, dest | stats count by signature | rename count as Activity</query>
           <earliest>$timepicker.earliest$</earliest>
           <latest>$timepicker.latest$</latest>
         </search>
@@ -55,7 +55,7 @@
     <panel>
       <table>
         <search>
-          <query>`vectra_index` sourcetype="vectra:cognito:campaigns" $signature_token$ reason=$reason_token$ | table rt,signature, vectra_url, action, src, src_ip, dest, dest_ip, reason, vectra_detection_id
+          <query>`vectra_cognito_index` sourcetype="vectra:cognito:campaigns" $signature_token$ reason=$reason_token$ | table rt,signature, vectra_url, action, src, src_ip, dest, dest_ip, reason, vectra_detection_id
  | rename rt as _time signature AS "Campaign ID" vectra_url AS "Campaign URL" action AS Action src AS "Hostname" src_ip AS "Source IP" dest AS "Destination" dest_ip AS "Destination IP" reason AS Type vectra_detection_id AS "Detection ID"</query>
           <earliest>$timepicker.earliest$</earliest>
           <latest>$timepicker.latest$</latest>
