@@ -13,7 +13,7 @@
 ## Using this App
 
 * Install this App on Search Heads
-* Set the index containing Vectra Data in the macro `vectra_cognito_index`
+* Adjust the index containing Vectra Cognito Data in the macro `vectra_cognito_index` in local/macros.conf
 
 ## Compatibility
 
