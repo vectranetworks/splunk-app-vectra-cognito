@@ -1,5 +1,5 @@
 <form>
-  <label>Cognito Detect Campaigns</label>
+  <label>Cognito Detect - Campaigns</label>
   <fieldset submitButton="false" autoRun="true">
     <input type="time" token="timepicker" searchWhenChanged="true">
       <label>Timerange:</label>
@@ -19,8 +19,8 @@
       <fieldForValue>signature</fieldForValue>
       <search>
         <query>`vectra_cognito_index` sourcetype="vectra:cognito:campaigns"  | stats count by signature</query>
-        <earliest>0</earliest>
-        <latest></latest>
+        <earliest>$timepicker.earliest$</earliest>
+        <latest>$timepicker.latest$</latest>
       </search>
     </input>
     <input type="dropdown" token="reason_token" searchWhenChanged="true">
@@ -32,8 +32,8 @@
       <search>
         <query>`vectra_cognito_index` sourcetype="vectra:cognito:campaigns" reason=* 
 |  stats count by reason</query>
-        <earliest>-30d@d</earliest>
-        <latest>now</latest>
+        <earliest>$timepicker.earliest$</earliest>
+        <latest>$timepicker.latest$</latest>
       </search>
     </input>
   </fieldset>

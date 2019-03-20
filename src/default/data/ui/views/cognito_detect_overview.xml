@@ -1,5 +1,5 @@
 <form>
-  <label>Cognito Detect Overview</label>
+  <label>Cognito Detect - Overview</label>
   <fieldset submitButton="false">
     <input type="time" token="timepicker" searchWhenChanged="true">
       <label>Timerange:</label>
@@ -87,8 +87,8 @@
         <option name="showTrendIndicator">1</option>
         <option name="trendColorInterpretation">standard</option>
         <option name="trendDisplayMode">absolute</option>
-        <option name="trendInterval">-24h</option>
-        <option name="underLabel">Compared to 24 hours before</option>
+        <option name="trendInterval">-1h</option>
+        <option name="underLabel">Compared to 1 hour before</option>
         <option name="useColors">1</option>
         <option name="useThousandSeparators">1</option>
         <drilldown>

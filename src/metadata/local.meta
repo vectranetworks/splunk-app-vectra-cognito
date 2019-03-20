@@ -31,3 +31,19 @@ export = none
 owner = admin
 version = 7.2.3
 modtime = 1552248574.932549000
+
+[views/cognito_detect_overview]
+version = 7.2.3
+modtime = 1553073669.109540000
+
+[views/cognito_detect_hosts]
+version = 7.2.3
+modtime = 1553073682.006224000
+
+[views/cognito_detect_detections]
+version = 7.2.3
+modtime = 1553073698.791584000
+
+[views/cognito_detect_campaigns]
+version = 7.2.3
+modtime = 1553073650.316296000

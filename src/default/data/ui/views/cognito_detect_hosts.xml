@@ -1,5 +1,5 @@
 <form>
-  <label>Cognito Detect Hosts</label>
+  <label>Cognito Detect - Hosts</label>
   <fieldset submitButton="true" autoRun="true">
     <input type="time" token="timepicker" searchWhenChanged="true">
       <label>Timerange:</label>
